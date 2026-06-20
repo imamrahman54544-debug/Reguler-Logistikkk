@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 interface MenuItem {
   icon: string;
   label: string;
@@ -38,22 +36,23 @@ const financeMenuItems: MenuItem[] = [
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  activeItem: string;
+  onSelect: (item: string) => void;
 }
 
-export default function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const [activeItem, setActiveItem] = useState("Dashboard");
-
+export default function Sidebar({ isOpen, onClose, activeItem, onSelect }: SidebarProps) {
   const renderMenuItem = (item: MenuItem) => {
     const isActive = activeItem === item.label;
     return (
-      <a
+      <button
         key={item.label}
-        href="#"
-        onClick={(e) => {
-          e.preventDefault();
-          setActiveItem(item.label);
+        type="button"
+        onClick={() => {
+          onSelect(item.label);
+          onClose();
         }}
-        className={`flex items-center gap-3 px-3 py-2 text-[14px] font-semibold rounded-lg cursor-pointer active:scale-[0.98] duration-200 ${
+        aria-current={isActive ? "page" : undefined}
+        className={`flex w-full items-center gap-3 px-3 py-2 text-[14px] font-semibold rounded-lg cursor-pointer active:scale-[0.98] duration-200 ${
           isActive
             ? "bg-secondary-container text-on-secondary-container font-bold"
             : "text-secondary hover:bg-surface-container-high transition-all"
@@ -66,7 +65,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           {item.icon}
         </span>
         {item.label}
-      </a>
+      </button>
     );
   };
 
